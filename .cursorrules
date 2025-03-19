@@ -1,0 +1,5 @@
+- Favor readability over everything else
+- Favor domain driven design for code and folder structure
+- In complex react components, use custom hooks to extract features
+- Use comments only to explain the WHY in complex code, not the what
+
