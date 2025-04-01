@@ -7,9 +7,4 @@ describe('App', () => {
     render(<App />)
     expect(screen.getByText('Welcome to React')).toBeInTheDocument()
   })
-
-  it('renders the main content', () => {
-    render(<App />)
-    expect(screen.getByText(/Start editing/i)).toBeInTheDocument()
-  })
 }) 

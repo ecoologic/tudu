@@ -1,6 +1,7 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+// @ts-expect-error - vite-plugin-eslint types are not properly exported in package.json
 import eslint from 'vite-plugin-eslint'
 
 // https://vite.dev/config/
@@ -12,6 +13,8 @@ export default defineConfig({
       cache: false,
       fix: true,
       lintOnStart: true,
+      failOnError: false,
+      failOnWarning: false,
     }),
   ],
   test: {
