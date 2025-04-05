@@ -15,8 +15,8 @@ interface Task {
   updatedAt: Date
 }
 
-// TODO: don't fail the build on pety errors
-const tasks = [
+// TODO: don't fail the build on pety errors like unused variables
+const tasks: Task[] = [
   {
     id: 1,
     title: 'evict ants from the kitchen',
@@ -69,6 +69,12 @@ const tasks = [
   }
 ]
 
+const TasksPage: FC = () => {
+  return <div>
+    <TaskList tasks={tasks} />
+  </div>
+}
+
 const TaskList: FC<{ tasks: Task[] }> = ({ tasks }) => {
   return <ul>
     {tasks.map((task) => (
@@ -84,7 +90,7 @@ const App: FC = () => {
         <h1>Welcome to React</h1>
       </header>
       <main>
-        <TaskList tasks={tasks} />
+        <TasksPage />
       </main>
     </div>
   )
