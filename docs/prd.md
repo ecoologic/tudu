@@ -68,7 +68,7 @@ Sure — here’s the **"Product Stages"** section from the PRD in bullet point 
   - **status:** Enum (_pending_, _in_progress_, _done_)
   - **is_blocked:** boolean computed
   - **value:** Enum (t-shirt sizing)
-  - **effort:** Numeric or categorical estimation
+  - **effort:** Enum (t-shirt sizing)
   - **due_by:** DateTime
   - **created_at, updated_at:** Timestamps
   - **position:** Order within a serial chain

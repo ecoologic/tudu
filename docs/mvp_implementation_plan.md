@@ -1,141 +1,188 @@
-# MVP implementation plan
+Below is a lean, self-contained implementation plan you can save in your project. It’s designed for incremental, story-by-story coding and can be copy/pasted to an AI for further guidance on each feature.
+# MVP Implementation Plan
 
-Below is a plain-text, self-contained implementation plan you can save in your project and copy/paste sections into an AI tool to progress feature by feature. It’s structured by user stories and organized into Epics with clear tasks and acceptance criteria, without relying on external tools.
+## Overview
+
+- **Project:** Imagination Todo App MVP
+- **Approach:** Domain-driven design with user stories, delivered one at a time in a Kanban-style flow.
+- **Goal:** Incrementally code and test features without external tools—this document serves as your progress status and guide.
+
+---
+
+## Development Process Guidelines
 
 ---
 
-## Solo Dev Incremental Implementation Plan
+## Domain Model
 
-### **Overview**
-- **Approach:** Implement one user story at a time with incremental, agile progress.
-- **Purpose:** This plan serves as a progress status document to guide feature-by-feature development.
-- **Focus:** Domain-driven design with core task management, keyboard-friendly UI, and visual feedback.
+**Task Entity:**
+
+```typescript
+type TShirt = "XS" | "S" | "M" | "L" | "XL";
+
+interface Task {
+  uuid: string;
+  title: string;
+  description: description; // Defaults to empty
+  value: TShirt; // Defaults to M
+  effort: TShirt; // Defaults to M
+  position: number; // Ordering, defaults to last
+  status: "pending" | "in_progress" | "done";
+  created_at: string;
+  updated_at: string;
+  is_blocked: boolean; // Computed from dependent tasks (not a stored field)
+}
+```
+
+- **Storage:** Use local storage (localStorage or IndexedDB) via a TaskStore service with CRUD operations.
 
 ---
+
+## User Stories by Priority
 
 ### **Epic 1: Core Task Management**
 
-#### **US-01: Task Creation**
-- **Description:**
-  - As a user, I want to create tasks with a title, description, value (instead of priority), and effort (t-shirt sizes).
-- **Acceptance Criteria:**
-  - A TaskForm is available to create new tasks.
-  - Tasks are saved locally with a unique UUID.
-  - The form validates that the title is non-empty.
-- **Tasks:**
-  - Build the TaskForm component.
-  - Implement TaskStore.create to save tasks in local storage.
-  - Write basic unit tests for task creation.
+- **US-00: View Task List**
+  - **Description:**
+    As a user, I want to view all my current tasks in a clear list so that I can quickly see what needs my attention.
+  - **Acceptance Criteria:**
+    - A main task list view displays all tasks with their title, status, and key attributes (value, effort).
+    - Tasks are sorted (e.g., by position or status).
+    - The view refreshes automatically as tasks are added or updated.
+  - **Implementation Tasks:**
+    - Create a TaskList component to render tasks from local storage.
+    - Integrate filtering/sorting as needed.
+    - Write tests to verify that the task list updates correctly.
 
----
+- **US-01: Task Creation**
+  - **Description:**
+    - As a user, I want to create tasks with title, description, value, and effort.
+  - **Acceptance Criteria:**
+    - A form (TaskForm) is available for task creation.
+    - Tasks are saved in local storage with a generated UUID.
+    - Basic validations (e.g., non-empty title) are enforced.
+  - **Implementation Tasks:**
+    - Build the TaskForm component.
+    - Integrate with TaskStore.create.
+    - Write unit tests for task creation.
 
-#### **US-02: Task Status Update**
-- **Description:**
-  - As a user, I want to update a task’s status among "pending", "in_progress", and "done".
-- **Acceptance Criteria:**
-  - Users can update a task’s status via a UI control or keyboard action.
-  - The UI reflects the updated status immediately.
-- **Tasks:**
-  - Add status update controls in the TaskList.
-  - Integrate status update functionality in TaskStore.
-  - Test status change behavior.
+- **US-02: Task Status Update**
+  - **Description:**
+    - As a user, I want to update a task’s status (pending, in_progress, done).
+  - **Acceptance Criteria:**
+    - UI controls allow status updates.
+    - TaskStore.update correctly modifies the status.
+  - **Implementation Tasks:**
+    - Add status control buttons/inputs to TaskList.
+    - Implement update logic.
+    - Write tests for status changes.
 
----
+- **US-03: Local Storage Integration**
+  - **Description:**
+    - As a user, I want my tasks stored locally so I can work offline.
+  - **Acceptance Criteria:**
+    - Tasks persist across browser sessions.
+    - All CRUD operations function as expected.
+  - **Implementation Tasks:**
+    - Build a local storage adapter.
+    - Integrate the adapter with TaskStore.
+    - Write persistence tests.
 
-#### **US-03: Local Storage Integration**
-- **Description:**
-  - As a user, I want my tasks to persist locally so I can work offline.
-- **Acceptance Criteria:**
-  - Tasks persist across sessions using local storage (or IndexedDB).
-  - CRUD operations (create, read, update, delete) work correctly.
-- **Tasks:**
-  - Implement a local storage adapter.
-  - Connect the adapter with TaskStore.
-  - Write tests for persistence functions.
+- **US-04: Task Reordering**
+  - **Description:**
+    - As a user (Mike), I want to reorder tasks using the position field.
+  - **Acceptance Criteria:**
+    - The UI supports drag-and-drop or keyboard-based reordering.
+    - The order is updated in TaskStore and persists between sessions.
+  - **Implementation Tasks:**
+    - Implement reordering (drag-and-drop or keyboard shortcuts).
+    - Update the `position` field.
+    - Write tests for reordering logic.
 
----
-
-#### **US-04: Task Reordering**
-- **Description:**
-  - As a user (Mike), I want to reorder tasks manually using the position field.
-- **Acceptance Criteria:**
-  - Users can reorder tasks (via drag-and-drop or keyboard shortcuts).
-  - The updated order persists between sessions.
-- **Tasks:**
-  - Implement reordering UI (drag-and-drop or keyboard-based).
-  - Update the TaskStore to save the new position.
-  - Test task ordering and persistence.
-
----
-
-#### **US-05: Task Edit & Delete**
-- **Description:**
-  - As a user, I want to edit or delete tasks.
-- **Acceptance Criteria:**
-  - Task edit form pre-populated with existing data works correctly.
-  - Deleting a task asks for confirmation before removal.
-- **Tasks:**
-  - Enhance TaskForm for editing.
-  - Implement deletion with confirmation.
-  - Validate with unit tests.
+- **US-05: Task Edit & Delete**
+  - **Description:**
+    - As a user, I want to edit or delete tasks.
+  - **Acceptance Criteria:**
+    - A task can be edited via an updated TaskForm.
+    - Task deletion requires a confirmation.
+  - **Implementation Tasks:**
+    - Extend TaskForm for editing.
+    - Implement delete functionality.
+    - Write tests for both edit and delete flows.
 
 ---
 
 ### **Epic 2: Keyboard-Friendly Interface**
 
-#### **US-06: Keyboard Shortcuts**
-- **Description:**
-  - As a user, I want to use keyboard shortcuts for actions like creating, editing, deleting, updating status, and navigating tasks.
-- **Acceptance Criteria:**
-  - Global key listeners trigger corresponding actions (e.g., `n` for new, `e` for edit, `d` for marking as done, `j/k` for navigation, `/` for search).
-  - Visual focus indicators show the selected task.
-- **Tasks:**
-  - Set up key listener hooks (or use a library like `react-hotkeys-hook`).
-  - Map shortcuts to actions in TaskList and TaskForm.
-  - Test shortcut behavior and UI feedback.
+- **US-06: Keyboard Shortcuts**
+  - **Description:**
+    - As a user, I want keyboard shortcuts for common actions:
+      - `n`: New task
+      - `e`: Edit selected task
+      - `d`: Delete/mark done
+      - `j/k`: Navigate tasks
+      - `/`: Focus search
+  - **Acceptance Criteria:**
+    - Keyboard shortcuts trigger the correct actions.
+    - Visual focus indication is updated accordingly.
+  - **Implementation Tasks:**
+    - Implement global key listeners (e.g., using a custom hook).
+    - Map keys to actions in TaskList and TaskForm.
+    - Write tests for keyboard functionality.
 
 ---
 
 ### **Epic 3: Visual Feedback & Computed Properties**
 
-#### **US-07: Task Completion Visuals**
-- **Description:**
-  - As a user, I want to see satisfying visual cues when I complete a task.
-- **Acceptance Criteria:**
-  - CSS animations (e.g., fade-out, strike-through) activate upon task completion.
-  - A visual indicator (badge/icon) appears to confirm completion.
-- **Tasks:**
-  - Implement CSS animations in the TaskList.
-  - Integrate visual feedback with status update logic.
-  - Verify visually and with UI tests.
+- **US-07: Task Completion Visuals**
+  - **Description:**
+    - As a user, I want a visual cue (animation) when I complete a task.
+  - **Acceptance Criteria:**
+    - A CSS animation (e.g., fade-out, strike-through) plays when a task is marked done.
+  - **Implementation Tasks:**
+    - Implement animations in TaskList.
+    - Integrate animations with status changes.
+    - Validate via UI tests.
+
+- **US-08: Computed Blocked Status**
+  - **Description:**
+    - As a user, I want tasks to display a computed `is_blocked` state if they have dependent tasks that aren’t complete.
+  - **Acceptance Criteria:**
+    - The UI indicates blocked tasks (e.g., with a lock icon or dimming effect).
+  - **Implementation Tasks:**
+    - Build a BlockedStatusCalculator service.
+    - Update Task UI to show blocked indicators.
+    - Write tests for the blocked status computation.
 
 ---
 
-#### **US-08: Computed Blocked Status**
-- **Description:**
-  - As a user, I want tasks to display a computed `is_blocked` state if dependent tasks aren’t completed.
-- **Acceptance Criteria:**
-  - The UI shows a visual indicator (e.g., a lock icon or dimmed effect) for blocked tasks.
-  - The `is_blocked` property is computed based on dependent task statuses.
-- **Tasks:**
-  - Build a BlockedStatusCalculator service.
-  - Update the Task UI to display the blocked indicator.
-  - Test the computation using sample dependency data.
+## Execution Process
+
+1. **Select a Story:**
+   - Copy the section for the next user story (e.g., US-01: Task Creation) to work on.
+2. **Develop:**
+   - Code the feature in a dedicated branch.
+   - Commit incremental changes with clear messages.
+3. **Test:**
+   - Write and run tests (unit/UI) to verify functionality.
+4. **Update Progress:**
+   - Mark the story as complete in this document before moving on.
+5. **Repeat:**
+   - Continue with the next highest-priority story.
 
 ---
 
-### **Execution Strategy**
-1. **Copy-Paste & Focus:**
-   - Copy a single story (with its description, criteria, and tasks) into your coding environment or prompt for the next incremental step.
-2. **Code, Test, and Commit:**
-   - Implement the feature, run tests, and commit changes before moving to the next story.
-3. **Incremental Progress:**
-   - Progress story-by-story in the order listed. Once one is done, copy the next story details to ensure clear focus.
-4. **Status Documentation:**
-   - Update this document with progress notes and any adjustments as you develop each feature.
+## Usage
+
+- **Progress Status:**
+  - This document is your project progress tracker. Update each user story’s status as you complete them.
+- **Copy/Paste to AI:**
+  - To get guidance or code samples, copy the relevant user story section into your AI tool.
+- **Adjust as Needed:**
+  - Feel free to add more details or modify tasks as you progress.
 
 ---
 
-This document can be saved in your project and used as a living guide to incrementally develop your app. Copy and paste the relevant story sections into your workflow or an AI assistant for targeted coding help as you progress.
+This plan is designed for a solo dev working incrementally without a formal timeline. Use it as your living document to guide your coding sessions and maintain clear progress toward the end result.
 
-Let me know if you need further adjustments or additional details for any specific story!
+Let me know if you need further modifications or additional details!
