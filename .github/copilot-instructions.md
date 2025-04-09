@@ -1,0 +1,9 @@
+- Favor readability, good naming and simplicity over everything else
+- Favor domain driven design for code and folder structure
+- In typescript, define all interfaces, don't define function return values
+- Use comments sparingly, and only to explain the WHY in complex code, not the what
+- Before introducing circular dependencies, ask
+- Review your code for best practices
+- When considering multiple options, provide your suggestions at the end
+- If you need more context, ask
+- I am a senior engineer, limit explanations

@@ -42,16 +42,15 @@ interface Task {
 
 ### **Epic 1: Core Task Management**
 
-- **US-00: View Task List**
+- [x] **US-00: View Task List**
   - **Description:**
     As a user, I want to view all my current tasks in a clear list so that I can quickly see what needs my attention.
   - **Acceptance Criteria:**
     - A main task list view displays all tasks with their title, status, and key attributes (value, effort).
-    - Tasks are sorted (e.g., by position or status).
+    - Tasks are sorted by position.
     - The view refreshes automatically as tasks are added or updated.
   - **Implementation Tasks:**
     - Create a TaskList component to render tasks from local storage.
-    - Integrate filtering/sorting as needed.
     - Write tests to verify that the task list updates correctly.
 
 - **US-01: Task Creation**
