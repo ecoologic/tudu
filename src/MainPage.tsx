@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 
 type TaskStatus = "todo" | "started" | "done";
 type TShirt = "XS" | "S" | "M" | "L" | "XL";
@@ -17,82 +17,17 @@ interface Task {
   tags: string[];
 }
 
-const initialTasks: Task[] = [
-  {
-    uuid: crypto.randomUUID(),
-    title: "evict ants from the kitchen",
-    description: "",
-    effort: "S",
-    position: 0,
-    status: "started",
-    value: "S",
-    is_blocked: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    tags: [],
-  },
-  {
-    uuid: crypto.randomUUID(),
-    title: "shower whistling",
-    description: "",
-    effort: "L",
-    position: 1,
-    status: "done",
-    value: "M",
-    is_blocked: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    tags: [],
-  },
-  {
-    uuid: crypto.randomUUID(),
-    title: "model content protocol (MCT)",
-    description: "",
-    effort: "M",
-    position: 2,
-    status: "todo",
-    value: "S",
-    is_blocked: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    tags: [],
-  },
-  {
-    uuid: crypto.randomUUID(),
-    title: "prep EM interview",
-    description: "",
-    effort: "M",
-    position: 3,
-    status: "todo",
-    value: "L",
-    is_blocked: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    tags: [],
-  },
-  {
-    uuid: crypto.randomUUID(),
-    title: "linkedin detailed history",
-    description: "",
-    effort: "M",
-    position: 4,
-    status: "started",
-    value: "L",
-    is_blocked: false,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    tags: [],
-  },
-];
+const STORAGE_KEY = "tasks";
 
-const taskSizeFor = (task: Task) =>
-  task.value === "L" || task.value === "XL" ? "2rem" : "inherit";
+const useTaskStore = () => {
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-export const MainPage: FC = () => {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const sortedTasks = [...tasks].sort((a, b) => a.position - b.position);
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    setTasks(JSON.parse(stored || "[]"));
+  }, []);
 
-  const handleAddTask = () => {
+  const addTask = () => {
     const newTask: Task = {
       uuid: crypto.randomUUID(),
       title: "New Task",
@@ -106,8 +41,20 @@ export const MainPage: FC = () => {
       updated_at: new Date().toISOString(),
       tags: [],
     };
-    setTasks([...tasks, newTask]);
+    const updatedTasks = [...tasks, newTask];
+    setTasks(updatedTasks);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedTasks));
   };
+
+  return { tasks, addTask };
+};
+
+const taskSizeFor = (task: Task) =>
+  task.value === "L" || task.value === "XL" ? "2rem" : "inherit";
+
+export const MainPage: FC = () => {
+  const { tasks, addTask } = useTaskStore();
+  const sortedTasks = [...tasks].sort((a, b) => a.position - b.position);
 
   return (
     <div>
@@ -134,7 +81,7 @@ export const MainPage: FC = () => {
         ))}
       </ul>
       <button
-        onClick={handleAddTask}
+        onClick={addTask}
         style={{
           padding: "0.5rem 1rem",
           marginBottom: "1rem",
