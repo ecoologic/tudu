@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from "react";
 import { storage, tasksStorageKey } from "./helpers/storage";
 import { isImportantTask, Task } from "./tasks";
+import { TaskForm } from "./TaskForm";
 
 const useTaskStore = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -10,19 +11,14 @@ const useTaskStore = () => {
   }, []);
 
   // New tasks at the bottom
-  const addTask = () => {
+  const addTask = (taskData: Omit<Task, 'uuid' | 'created_at' | 'updated_at' | 'position'> & { tags: string[] | string }) => {
     const newTask: Task = {
+      ...taskData,
       uuid: crypto.randomUUID(),
-      title: "New Task",
-      description: "",
-      effort: "M",
       position: tasks.length,
-      status: "todo",
-      value: "M",
-      is_blocked: false,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      tags: [],
+      tags: Array.isArray(taskData.tags) ? taskData.tags : String(taskData.tags).split(',').map((t: string) => t.trim()),
     };
     storage.addResource(tasksStorageKey, {
       newResource: newTask,
@@ -67,20 +63,10 @@ export const TaskListPage: FC = () => {
           </li>
         ))}
       </ul>
-      <button
-        onClick={addTask}
-        style={{
-          padding: "0.5rem 1rem",
-          marginBottom: "1rem",
-          backgroundColor: "#4CAF50",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
-      >
-        Add
-      </button>
+      <div className="mb-4">
+        <h2 className="text-xl font-bold mb-2">Add New Task</h2>
+        <TaskForm onSubmit={addTask} />
+      </div>
     </div>
   );
 };
