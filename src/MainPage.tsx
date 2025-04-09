@@ -1,6 +1,6 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 
-type TaskStatus = "pending" | "progressing" | "completed";
+type TaskStatus = "todo" | "started" | "done";
 type TShirt = "XS" | "S" | "M" | "L" | "XL";
 
 interface Task {
@@ -24,7 +24,7 @@ const tasks: Task[] = [
     description: "",
     effort: "S",
     position: 0,
-    status: "pending",
+    status: "started",
     value: "S",
     is_blocked: false,
     created_at: new Date().toISOString(),
@@ -37,7 +37,7 @@ const tasks: Task[] = [
     description: "",
     effort: "L",
     position: 1,
-    status: "pending",
+    status: "done",
     value: "M",
     is_blocked: false,
     created_at: new Date().toISOString(),
@@ -50,7 +50,7 @@ const tasks: Task[] = [
     description: "",
     effort: "M",
     position: 2,
-    status: "pending",
+    status: "todo",
     value: "S",
     is_blocked: false,
     created_at: new Date().toISOString(),
@@ -63,7 +63,7 @@ const tasks: Task[] = [
     description: "",
     effort: "M",
     position: 3,
-    status: "pending",
+    status: "todo",
     value: "L",
     is_blocked: false,
     created_at: new Date().toISOString(),
@@ -76,7 +76,7 @@ const tasks: Task[] = [
     description: "",
     effort: "M",
     position: 4,
-    status: "pending",
+    status: "started",
     value: "L",
     is_blocked: false,
     created_at: new Date().toISOString(),
@@ -85,11 +85,32 @@ const tasks: Task[] = [
   },
 ];
 
+const sortedTasks = [...tasks].sort((a, b) => a.position - b.position);
+
+const fontSizeFor = (value: TShirt) => {
+  return value === "L" || value === "XL" ? "2rem" : "inherit";
+};
+
 export const MainPage: FC = () => {
   return (
     <ul>
-      {tasks.map((task) => (
-        <li key={task.uuid}>{task.title}</li>
+      {sortedTasks.map((task) => (
+        <li key={task.uuid}>
+          <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+            <input type="checkbox" checked={task.status === "done"} readOnly />
+            <span style={{ fontSize: fontSizeFor(task.value) }}>
+              {task.title}
+            </span>
+            {task.status === "started" && (
+              <span>
+                <i>{task.status}</i>
+              </span>
+            )}
+            <span>Effort: {task.effort}</span>
+            <span>Value: {task.value}</span>
+            <span>{task.tags.join(", ")}</span>
+          </div>
+        </li>
       ))}
     </ul>
   );
