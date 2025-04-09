@@ -64,7 +64,7 @@ export const TaskListPage: FC = () => {
         ))}
       </ul>
       <div className="mb-4">
-        <h2 className="text-xl font-bold mb-2">Add New Task</h2>
+        <h2 className="text-xl font-bold mb-2">New task</h2>
         <TaskForm onSubmit={addTask} />
       </div>
     </div>

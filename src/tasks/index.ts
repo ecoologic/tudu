@@ -1,6 +1,7 @@
 import { TShirt } from "../helpers/types";
 
 export type TaskStatus = "todo" | "started" | "done";
+export const taskStatuses: TaskStatus[] = ['todo', 'started', 'done'] as const;
 
 export interface Task {
   uuid: string;

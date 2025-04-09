@@ -1,25 +1,21 @@
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
-import { Task, TaskStatus } from './tasks';
+import { Task } from './tasks';
 import { tShirtSizes } from './helpers/types';
 
 interface TaskFormProps {
-  onSubmit: (data: Omit<Task, 'uuid' | 'created_at' | 'updated_at' | 'position'> & { tags: string[] | string }) => void;
-  initialData?: Partial<Task>;
+  onSubmit: (data: Omit<Task, 'uuid' | 'created_at' | 'updated_at' | 'position'> & { tags: string[] }) => void;
+  task?: Partial<Task>;
 }
 
-const taskStatuses: TaskStatus[] = ['todo', 'started', 'done'];
-
-export const TaskForm: FC<TaskFormProps> = ({ onSubmit, initialData = {} }) => {
+export const TaskForm: FC<TaskFormProps> = ({ onSubmit, task = {} }) => {
   const { register, handleSubmit, formState: { errors } } = useForm<Task>({
     defaultValues: {
-      title: initialData.title || '',
-      description: initialData.description || '',
-      value: initialData.value || 'M',
-      effort: initialData.effort || 'M',
-      status: initialData.status || 'todo',
-      is_blocked: initialData.is_blocked || false,
-      tags: initialData.tags || [],
+      title: task.title || '',
+      description: task.description || '',
+      value: task.value || 'M',
+      effort: task.effort || 'M',
+      tags: task.tags || [],
     }
   });
 
@@ -30,6 +26,7 @@ export const TaskForm: FC<TaskFormProps> = ({ onSubmit, initialData = {} }) => {
           {...register('title', { required: 'Title is required' })}
           placeholder="Task title"
           className="w-full p-2 border rounded"
+          autoFocus
         />
         {errors.title && (
           <span className="text-red-500 text-sm">{errors.title.message}</span>
@@ -63,22 +60,6 @@ export const TaskForm: FC<TaskFormProps> = ({ onSubmit, initialData = {} }) => {
             ))}
           </select>
         </div>
-
-        <div>
-          <label className="block text-sm">Status</label>
-          <select {...register('status')} className="p-2 border rounded">
-            {taskStatuses.map(status => (
-              <option key={status} value={status}>{status}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div>
-        <label className="flex items-center gap-2">
-          <input type="checkbox" {...register('is_blocked')} />
-          <span>Is Blocked</span>
-        </label>
       </div>
 
       <div>
@@ -93,7 +74,7 @@ export const TaskForm: FC<TaskFormProps> = ({ onSubmit, initialData = {} }) => {
         type="submit"
         className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >
-        Save Task
+        Save
       </button>
     </form>
   );
