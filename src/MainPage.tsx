@@ -17,9 +17,9 @@ interface Task {
   tags: string[];
 }
 
-const tasks: Task[] = [
+const initialTasks: Task[] = [
   {
-    uuid: "1",
+    uuid: crypto.randomUUID(),
     title: "evict ants from the kitchen",
     description: "",
     effort: "S",
@@ -32,7 +32,7 @@ const tasks: Task[] = [
     tags: [],
   },
   {
-    uuid: "2",
+    uuid: crypto.randomUUID(),
     title: "shower whistling",
     description: "",
     effort: "L",
@@ -45,7 +45,7 @@ const tasks: Task[] = [
     tags: [],
   },
   {
-    uuid: "3",
+    uuid: crypto.randomUUID(),
     title: "model content protocol (MCT)",
     description: "",
     effort: "M",
@@ -58,7 +58,7 @@ const tasks: Task[] = [
     tags: [],
   },
   {
-    uuid: "4",
+    uuid: crypto.randomUUID(),
     title: "prep EM interview",
     description: "",
     effort: "M",
@@ -71,7 +71,7 @@ const tasks: Task[] = [
     tags: [],
   },
   {
-    uuid: "5",
+    uuid: crypto.randomUUID(),
     title: "linkedin detailed history",
     description: "",
     effort: "M",
@@ -85,33 +85,68 @@ const tasks: Task[] = [
   },
 ];
 
-const sortedTasks = [...tasks].sort((a, b) => a.position - b.position);
-
-const fontSizeFor = (value: TShirt) => {
-  return value === "L" || value === "XL" ? "2rem" : "inherit";
-};
+const taskSizeFor = (task: Task) =>
+  task.value === "L" || task.value === "XL" ? "2rem" : "inherit";
 
 export const MainPage: FC = () => {
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const sortedTasks = [...tasks].sort((a, b) => a.position - b.position);
+
+  const handleAddTask = () => {
+    const newTask: Task = {
+      uuid: crypto.randomUUID(),
+      title: "New Task",
+      description: "",
+      effort: "M",
+      position: tasks.length,
+      status: "todo",
+      value: "M",
+      is_blocked: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      tags: [],
+    };
+    setTasks([...tasks, newTask]);
+  };
+
   return (
-    <ul>
-      {sortedTasks.map((task) => (
-        <li key={task.uuid}>
-          <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            <input type="checkbox" checked={task.status === "done"} readOnly />
-            <span style={{ fontSize: fontSizeFor(task.value) }}>
-              {task.title}
-            </span>
-            {task.status === "started" && (
-              <span>
-                <i>{task.status}</i>
-              </span>
-            )}
-            <span>Effort: {task.effort}</span>
-            <span>Value: {task.value}</span>
-            <span>{task.tags.join(", ")}</span>
-          </div>
-        </li>
-      ))}
-    </ul>
+    <div>
+      <ul>
+        {sortedTasks.map((task) => (
+          <li key={task.uuid}>
+            <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+              <input
+                type="checkbox"
+                checked={task.status === "done"}
+                readOnly
+              />
+              <span style={{ fontSize: taskSizeFor(task) }}>{task.title}</span>
+              {task.status === "started" && (
+                <span>
+                  <i>{task.status}</i>
+                </span>
+              )}
+              <span>Effort: {task.effort}</span>
+              <span>Value: {task.value}</span>
+              <span>{task.tags.join(", ")}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <button
+        onClick={handleAddTask}
+        style={{
+          padding: "0.5rem 1rem",
+          marginBottom: "1rem",
+          backgroundColor: "#4CAF50",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+        Add
+      </button>
+    </div>
   );
 };
