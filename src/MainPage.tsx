@@ -4,66 +4,84 @@ type TaskStatus = "pending" | "progressing" | "completed";
 type TShirt = "XS" | "S" | "M" | "L" | "XL";
 
 interface Task {
-  id: number;
+  uuid: string;
   title: string;
-  tags: string[];
+  description: string;
+  value: TShirt;
+  effort: TShirt;
+  position: number;
   status: TaskStatus;
-  priority: TShirt;
-  difficulty: TShirt;
-  createdAt: Date;
-  updatedAt: Date;
+  is_blocked: boolean;
+  created_at: string;
+  updated_at: string;
+  tags: string[];
 }
 
 const tasks: Task[] = [
   {
-    id: 1,
+    uuid: "1",
     title: "evict ants from the kitchen",
-    tags: ["house", "rent"],
-    status: "pending" as const,
-    priority: "S" as const,
-    difficulty: "S" as const,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    description: "",
+    effort: "S",
+    position: 0,
+    status: "pending",
+    value: "S",
+    is_blocked: false,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    tags: [],
   },
   {
-    id: 2,
-    title: "shower whisteling",
-    tags: ["house", "rent"],
-    status: "pending" as const,
-    priority: "M" as const,
-    difficulty: "L" as const,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    uuid: "2",
+    title: "shower whistling",
+    description: "",
+    effort: "L",
+    position: 1,
+    status: "pending",
+    value: "M",
+    is_blocked: false,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    tags: [],
   },
   {
-    id: 3,
+    uuid: "3",
     title: "model content protocol (MCT)",
-    tags: ["pc", "job"],
-    status: "pending" as const,
-    priority: "S" as const,
-    difficulty: "M" as const,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    description: "",
+    effort: "M",
+    position: 2,
+    status: "pending",
+    value: "S",
+    is_blocked: false,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    tags: [],
   },
   {
-    id: 4,
+    uuid: "4",
     title: "prep EM interview",
-    tags: ["pc", "job"],
-    status: "pending" as const,
-    priority: "L" as const,
-    difficulty: "M" as const,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    description: "",
+    effort: "M",
+    position: 3,
+    status: "pending",
+    value: "L",
+    is_blocked: false,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    tags: [],
   },
   {
-    id: 5,
+    uuid: "5",
     title: "linkedin detailed history",
-    tags: ["pc", "job"],
-    status: "pending" as const,
-    priority: "L" as const,
-    difficulty: "M" as const,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    description: "",
+    effort: "M",
+    position: 4,
+    status: "pending",
+    value: "L",
+    is_blocked: false,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    tags: [],
   },
 ];
 
@@ -71,7 +89,7 @@ export const MainPage: FC = () => {
   return (
     <ul>
       {tasks.map((task) => (
-        <li key={task.id}>{task.title}</li>
+        <li key={task.uuid}>{task.title}</li>
       ))}
     </ul>
   );
