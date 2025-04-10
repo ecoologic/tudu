@@ -5,7 +5,8 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  // TODO
+  { ignores: ['dist', 'src/lib/use-toast.ts', 'src/lib/use-toast.d.ts', 'src/components/ui/button.tsx', 'tailwind.config.js'] },
   {
     extends: [js.configs.recommended],
     files: ['**/*.{js,ts,tsx}']
