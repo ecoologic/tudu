@@ -7,6 +7,7 @@ vi.mock("./helpers/storage", () => ({
   storage: {
     getResource: vi.fn(),
     addResource: vi.fn(),
+    deleteResource: vi.fn(),
   },
   tasksStorageKey: "tasks",
 }));
@@ -37,8 +38,8 @@ describe("TaskListPage", () => {
     render(<TaskListPage />);
 
     expect(screen.getByText("Task 1")).toBeInTheDocument();
-    expect(screen.getByText("Effort: M")).toBeInTheDocument();
-    expect(screen.getByText("Value: M")).toBeInTheDocument();
+    expect(screen.getByText("E: M")).toBeInTheDocument();
+    expect(screen.getByText("V: M")).toBeInTheDocument();
     expect(screen.getByText("tag1")).toBeInTheDocument();
   });
 
@@ -120,6 +121,78 @@ describe("TaskListPage", () => {
     render(<TaskListPage />);
 
     const importantTask = screen.getByText("Important Task");
-    expect(importantTask).toHaveStyle("font-size: 2rem");
+    expect(importantTask).toHaveClass("text-xl");
+  });
+  
+  it("renders a delete button for each task", () => {
+    const mockTasks = [
+      {
+        uuid: "1",
+        title: "Task 1",
+        description: "",
+        effort: "M",
+        position: 0,
+        status: "todo",
+        value: "M",
+        is_blocked: false,
+        created_at: "2023-01-01T00:00:00Z",
+        updated_at: "2023-01-01T00:00:00Z",
+        tags: [],
+      },
+      {
+        uuid: "2",
+        title: "Task 2",
+        description: "",
+        effort: "M",
+        position: 1,
+        status: "todo",
+        value: "M",
+        is_blocked: false,
+        created_at: "2023-01-01T00:00:00Z",
+        updated_at: "2023-01-01T00:00:00Z",
+        tags: [],
+      },
+    ];
+    vi.mocked(storage.getResource).mockReturnValue(mockTasks);
+
+    render(<TaskListPage />);
+
+    // Find all delete buttons (trash icons)
+    const deleteButtons = screen.getAllByRole("button", { name: /delete/i });
+    expect(deleteButtons).toHaveLength(2);
+  });
+
+  it("deletes a task when delete is confirmed", () => {
+    const mockTasks = [
+      {
+        uuid: "1",
+        title: "Task 1",
+        description: "",
+        effort: "M",
+        position: 0,
+        status: "todo",
+        value: "M",
+        is_blocked: false,
+        created_at: "2023-01-01T00:00:00Z",
+        updated_at: "2023-01-01T00:00:00Z",
+        tags: [],
+      },
+    ];
+    vi.mocked(storage.getResource).mockReturnValue(mockTasks);
+    vi.mocked(storage.deleteResource).mockReturnValue([]);
+
+    render(<TaskListPage />);
+
+    // Find and click the delete button
+    const deleteButton = screen.getByLabelText("Delete");
+    fireEvent.click(deleteButton);
+
+    // Find and click the confirm button (check icon)
+    const confirmButton = document.querySelector('svg.lucide-check');
+    expect(confirmButton).toBeInTheDocument();
+    fireEvent.click(deleteButton);
+
+    // Check that deleteResource was called with the correct arguments
+    expect(storage.deleteResource).toHaveBeenCalledWith(tasksStorageKey, "1");
   });
 });
