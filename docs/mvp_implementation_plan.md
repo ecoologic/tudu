@@ -98,18 +98,32 @@ interface Task {
     - Update the `position` field.
     - Write tests for reordering logic.
 
-- **US-05: Task Edit & Delete**
+- **US-05: Delete Task**
   - **Description:**
-    - As a user, I want to edit or delete tasks.
+    - As a user, I want to delete a task with confirmation to prevent accidental removal.
   - **Acceptance Criteria:**
-    - A task can be edited via an updated TaskForm.
-    - Task deletion requires a confirmation.
+    - A transparent trash icon appears at the far right of the task.
+    - Clicking the trash icon turns it into a confirmation icon.
+    - If the mouse moves away, the icon reverts to the trash icon.
+    - Works on both light and dark themes.
   - **Implementation Tasks:**
-    - Extend TaskForm for editing.
-    - Implement delete functionality.
-    - Write tests for both edit and delete flows.
+    - Implement confirmable trash icon logic.
+    - Style for accessibility and theme compatibility.
+    - Extract reusable confirmable action component.
 
----
+- **US-06: Edit Task**
+  - **Description:**
+    - As a user, I want to edit a task inline so that I can quickly update it without opening a form.
+  - **Acceptance Criteria:**
+    - Clicking the task title turns it into an input field.
+    - Pressing `Enter` or clicking outside saves changes.
+    - Pressing `Escape` cancels changes.
+    - `Tab` navigates to the next task.
+    - The task briefly highlights after a successful edit.
+  - **Implementation Tasks:**
+    - Build inline editable title component.
+    - Persist updates to local storage.
+    - Add keyboard and focus handling.
 
 ### **Epic 2: Keyboard-Friendly Interface**
 
