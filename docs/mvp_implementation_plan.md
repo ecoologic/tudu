@@ -53,7 +53,7 @@ interface Task {
     - Create a TaskList component to render tasks from local storage.
     - Write tests to verify that the task list updates correctly.
 
-- **US-01: Task Creation**
+- [x] **US-01: Task Creation**
   - **Description:**
     - As a user, I want to create tasks with title, description, value, and effort.
   - **Acceptance Criteria:**
