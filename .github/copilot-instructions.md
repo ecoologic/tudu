@@ -4,6 +4,7 @@
 - Use comments sparingly, and only to explain the WHY in complex code, not the what
 - Before introducing circular dependencies, ask
 - Review your code for best practices
+- When writing tests, use the rules from betterspecs.org
 - When considering multiple options, provide your suggestions at the end
 - If you need more context, ask
 - I am a senior engineer, limit explanations
