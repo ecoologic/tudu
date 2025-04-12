@@ -6,7 +6,8 @@ import tailwindcss from "@tailwindcss/vite";
 // @ts-expect-error - vite-plugin-eslint types are not properly exported in package.json
 import eslint from "vite-plugin-eslint";
 
-// https://vite.dev/config/
+const __dirname = path.resolve();
+
 export default defineConfig({
   plugins: [
     react(),
@@ -18,8 +19,13 @@ export default defineConfig({
       lintOnStart: false, // Disable linting on start to avoid redundancy
       failOnError: false,
       failOnWarning: false,
-    }),
+    })
   ],
+  css: {
+    postcss: {
+      map: true
+    }
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src")
@@ -32,5 +38,6 @@ export default defineConfig({
     coverage: {
       reporter: ["text", "json", "html"],
     },
+    exclude: [".trunk/**/*", "node_modules/**/*"],
   },
 });
