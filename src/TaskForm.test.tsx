@@ -16,11 +16,11 @@ describe('TaskForm', () => {
     expect(screen.getByPlaceholderText('Tags (comma-separated)')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
 
-    // Check the hidden inputs for default values
-    const valueInput = document.querySelector('input[name="value"]');
-    const effortInput = document.querySelector('input[name="effort"]');
-    expect(valueInput).toHaveValue('M');
-    expect(effortInput).toHaveValue('M');
+    // Update the queries to target the correct elements rendered by TShirtSizeSelect
+    const valueSelect = screen.getByLabelText('Value');
+    const effortSelect = screen.getByLabelText('Effort');
+    expect(valueSelect).toHaveValue('M');
+    expect(effortSelect).toHaveValue('M');
   });
 
   it('renders with provided task values', () => {
@@ -38,11 +38,11 @@ describe('TaskForm', () => {
     expect(screen.getByPlaceholderText('Task title')).toHaveValue('Test Task');
     expect(screen.getByPlaceholderText('Description')).toHaveValue('Test Description');
 
-    // Check the hidden inputs for custom values
-    const valueInput = document.querySelector('input[name="value"]');
-    const effortInput = document.querySelector('input[name="effort"]');
-    expect(valueInput).toHaveValue('L');
-    expect(effortInput).toHaveValue('S');
+    // Update the queries to target the correct elements rendered by TShirtSizeSelect
+    const valueSelect = screen.getByLabelText('Value');
+    const effortSelect = screen.getByLabelText('Effort');
+    expect(valueSelect).toHaveValue('L');
+    expect(effortSelect).toHaveValue('S');
 
     expect(screen.getByPlaceholderText('Tags (comma-separated)')).toHaveValue('test,important');
   });
@@ -102,12 +102,12 @@ describe('TaskForm', () => {
     const onSubmit = vi.fn();
     render(<TaskForm onSubmit={onSubmit} />);
 
-    // Check the value and effort hidden inputs have the default 'M' value
-    const valueInput = document.querySelector('input[name="value"]');
-    const effortInput = document.querySelector('input[name="effort"]');
+    // Update the queries to target the correct elements rendered by TShirtSizeSelect
+    const valueSelect = screen.getByLabelText('Value');
+    const effortSelect = screen.getByLabelText('Effort');
 
-    expect(valueInput).toHaveValue('M');
-    expect(effortInput).toHaveValue('M');
+    expect(valueSelect).toHaveValue('M');
+    expect(effortSelect).toHaveValue('M');
   });
 
 });

@@ -12,7 +12,7 @@ vi.mock("./helpers/storage", () => ({
   tasksStorageKey: "tasks",
 }));
 
-describe("TaskListPage", () => {
+describe("TasksPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -106,7 +106,7 @@ describe("TaskListPage", () => {
         effort: "M",
         position: 0,
         status: "todo",
-        value: "M",
+        value: "L",
         is_blocked: false,
         created_at: "2023-01-01T00:00:00Z",
         updated_at: "2023-01-01T00:00:00Z",
@@ -114,16 +114,13 @@ describe("TaskListPage", () => {
       },
     ];
     vi.mocked(storage.getResource).mockReturnValue(mockTasks);
-    vi.mock("./tasks", () => ({
-      isImportantTask: () => true,
-    }));
 
     render(<TaskListPage />);
 
     const importantTask = screen.getByText("Important Task");
     expect(importantTask).toHaveClass("text-xl");
   });
-  
+
   it("renders a delete button for each task", () => {
     const mockTasks = [
       {

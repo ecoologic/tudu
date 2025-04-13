@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
-import { Task } from './tasks';
+import { emptyTask, Task } from './tasks';
 import { Button } from './components/ui/button';
 import { Input } from './components/ui/input';
 import { Textarea } from './components/ui/textarea';
@@ -11,14 +11,14 @@ interface TaskFormProps {
   task?: Partial<Task>;
 }
 
-export const TaskForm: FC<TaskFormProps> = ({ onSubmit, task = {} }) => {
+export const TaskForm: FC<TaskFormProps> = ({ onSubmit, task = emptyTask }) => {
   const { register, handleSubmit, formState: { errors } } = useForm<Task>({
     defaultValues: {
-      title: task.title || '',
-      description: task.description || '',
-      value: task.value || 'M',
-      effort: task.effort || 'M',
-      tags: task.tags || [],
+      title: task.title,
+      description: task.description,
+      value: task.value,
+      effort: task.effort,
+      tags: task.tags,
     }
   });
 

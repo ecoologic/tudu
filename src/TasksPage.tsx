@@ -19,6 +19,7 @@ const useTaskStore = () => {
       position: tasks.length,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
+      // TODO: confident code: either all tags are strings or all are arrays
       tags: Array.isArray(taskData.tags) ? taskData.tags : String(taskData.tags).split(',').map((t: string) => t.trim()),
     };
     storage.addResource(tasksStorageKey, {
@@ -41,7 +42,7 @@ const useTaskStore = () => {
 const MaybeStartedLabel: FC<{ task: Task }> = ({ task }) => {
   return task.status === "started" && (
     <span className="text-orange-500 text-sm">
-      <i>{task.status}</i>
+      <i>Started... </i>
     </span>)
   }
 
@@ -70,8 +71,8 @@ export const TaskListPage: FC = () => {
               </div>
 
               <div className="flex items-center gap-4">
-                <span className="text-sm">E: {task.effort}</span>
                 <span className="text-sm">V: {task.value}</span>
+                <span className="text-sm">E: {task.effort}</span>
                 <div className="flex gap-1">
                   {task.tags.map((tag) => (
                     <span key={tag} className="bg-gray-100 dark:bg-gray-800 text-xs px-2 py-1 rounded">
