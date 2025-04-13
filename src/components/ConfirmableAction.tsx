@@ -7,6 +7,7 @@ interface ConfirmableActionProps {
   className?: string;
 }
 
+// TODO: Generic name for delete action (eg: icon, text)
 export const ConfirmableAction: FC<ConfirmableActionProps> = ({
   onConfirm,
   size = 18,
@@ -40,7 +41,7 @@ export const ConfirmableAction: FC<ConfirmableActionProps> = ({
   }, [isConfirming]);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className={`cursor-pointer ${className}`}
       onClick={handleClick}
@@ -54,14 +55,14 @@ export const ConfirmableAction: FC<ConfirmableActionProps> = ({
       }}
     >
       {isConfirming ? (
-        <Check 
-          size={size} 
-          className="text-red-500 animate-pulse" 
+        <Check
+          size={size}
+          className="text-red-500 animate-pulse"
         />
       ) : (
-        <Trash2 
-          size={size} 
-          className="text-muted-foreground/70 hover:text-red-500 transition-colors" 
+        <Trash2
+          size={size}
+          className="text-muted-foreground/70 hover:text-red-500 transition-colors"
         />
       )}
     </div>

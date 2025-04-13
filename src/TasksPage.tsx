@@ -38,6 +38,13 @@ const useTaskStore = () => {
   return { sortedTasks, addTask, deleteTask };
 };
 
+const MaybeStartedLabel: FC<{ task: Task }> = ({ task }) => {
+  return task.status === "started" && (
+    <span className="text-orange-500 text-sm">
+      <i>{task.status}</i>
+    </span>)
+  }
+
 export const TaskListPage: FC = () => {
   const { sortedTasks, addTask, deleteTask } = useTaskStore();
 
@@ -59,13 +66,9 @@ export const TaskListPage: FC = () => {
                 >
                   {task.title}
                 </span>
-                {task.status === "started" && (
-                  <span className="text-blue-500 text-sm">
-                    <i>{task.status}</i>
-                  </span>
-                )}
+                <MaybeStartedLabel task={task} />
               </div>
-              
+
               <div className="flex items-center gap-4">
                 <span className="text-sm">E: {task.effort}</span>
                 <span className="text-sm">V: {task.value}</span>
