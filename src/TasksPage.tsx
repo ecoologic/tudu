@@ -2,6 +2,7 @@ import { FC, useState, useEffect } from "react";
 import { storage, tasksStorageKey } from "./helpers/storage";
 import { isImportantTask, Task } from "./tasks";
 import { TaskForm } from "./TaskForm";
+import { ConfirmableAction } from "./components/ConfirmableAction";
 
 const useTaskStore = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -18,6 +19,7 @@ const useTaskStore = () => {
       position: tasks.length,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
+      // TODO: confident code: either all tags are strings or all are arrays
       tags: Array.isArray(taskData.tags) ? taskData.tags : String(taskData.tags).split(',').map((t: string) => t.trim()),
     };
     storage.addResource(tasksStorageKey, {
@@ -27,38 +29,59 @@ const useTaskStore = () => {
     setTasks([...tasks, newTask]);
   };
 
+  const deleteTask = (uuid: string) => {
+    const updatedTasks = storage.deleteResource<Task>(tasksStorageKey, uuid);
+    setTasks(updatedTasks);
+  };
+
   const sortedTasks = [...tasks].sort((a, b) => a.position - b.position);
 
-  return { sortedTasks, addTask };
+  return { sortedTasks, addTask, deleteTask };
 };
 
+const MaybeStartedLabel: FC<{ task: Task }> = ({ task }) => {
+  return task.status === "started" && (
+    <span className="text-orange-500 text-sm">
+      <i>Started... </i>
+    </span>)
+  }
+
 export const TaskListPage: FC = () => {
-  const { sortedTasks, addTask } = useTaskStore();
+  const { sortedTasks, addTask, deleteTask } = useTaskStore();
 
   return (
     <div>
-      <ul>
+      <ul className="space-y-2">
         {sortedTasks.map((task) => (
-          <li key={task.uuid}>
-            <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-              <input
-                type="checkbox"
-                checked={task.status === "done"}
-                readOnly
-              />
-              <span
-                style={{ fontSize: isImportantTask(task) ? "2rem" : "inherit" }}
-              >
-                {task.title}
-              </span>
-              {task.status === "started" && (
-                <span>
-                  <i>{task.status}</i>
+          <li key={task.uuid} className="border rounded-md p-3 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex gap-3 items-center flex-1">
+                <input
+                  type="checkbox"
+                  checked={task.status === "done"}
+                  readOnly
+                  className="h-5 w-5"
+                />
+                <span
+                  className={isImportantTask(task) ? "text-xl font-semibold" : ""}
+                >
+                  {task.title}
                 </span>
-              )}
-              <span>Effort: {task.effort}</span>
-              <span>Value: {task.value}</span>
-              <span>{task.tags.join(", ")}</span>
+                <MaybeStartedLabel task={task} />
+              </div>
+
+              <div className="flex items-center gap-4">
+                <span className="text-sm">V: {task.value}</span>
+                <span className="text-sm">E: {task.effort}</span>
+                <div className="flex gap-1">
+                  {task.tags.map((tag) => (
+                    <span key={tag} className="bg-gray-100 dark:bg-gray-800 text-xs px-2 py-1 rounded">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <ConfirmableAction onConfirm={() => deleteTask(task.uuid)} />
+              </div>
             </div>
           </li>
         ))}

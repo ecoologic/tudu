@@ -19,3 +19,13 @@ export interface Task {
 
 export const isImportantTask = (task: Task) =>
   task.value === "L" || task.value === "XL";
+
+export const emptyTask: Partial<Task> = {
+  title: "",
+  description: "",
+  value: "M",
+  effort: "M",
+  status: "todo",
+  is_blocked: false,
+  tags: [],
+};

@@ -1,31 +1,33 @@
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
-import { Task } from './tasks';
-import { tShirtSizes } from './helpers/types';
+import { emptyTask, Task } from './tasks';
+import { Button } from './components/ui/button';
+import { Input } from './components/ui/input';
+import { Textarea } from './components/ui/textarea';
+import { TShirtSizeSelect } from './components/TShirtSizeSelect';
 
 interface TaskFormProps {
   onSubmit: (data: Omit<Task, 'uuid' | 'created_at' | 'updated_at' | 'position'> & { tags: string[] }) => void;
   task?: Partial<Task>;
 }
 
-export const TaskForm: FC<TaskFormProps> = ({ onSubmit, task = {} }) => {
+export const TaskForm: FC<TaskFormProps> = ({ onSubmit, task = emptyTask }) => {
   const { register, handleSubmit, formState: { errors } } = useForm<Task>({
     defaultValues: {
-      title: task.title || '',
-      description: task.description || '',
-      value: task.value || 'M',
-      effort: task.effort || 'M',
-      tags: task.tags || [],
+      title: task.title,
+      description: task.description,
+      value: task.value,
+      effort: task.effort,
+      tags: task.tags,
     }
   });
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
       <div>
-        <input
+        <Input
           {...register('title', { required: 'Title is required' })}
           placeholder="Task title"
-          className="w-full p-2 border rounded"
           autoFocus
         />
         {errors.title && (
@@ -34,48 +36,39 @@ export const TaskForm: FC<TaskFormProps> = ({ onSubmit, task = {} }) => {
       </div>
 
       <div>
-        <textarea
+        <Textarea
           {...register('description')}
           placeholder="Description"
-          className="w-full p-2 border rounded"
           rows={3}
         />
       </div>
 
       <div className="flex gap-4">
-        <div>
-          <label className="block text-sm">Value</label>
-          <select {...register('value')} className="p-2 border rounded">
-            {tShirtSizes.map(size => (
-              <option key={size} value={size}>{size}</option>
-            ))}
-          </select>
-        </div>
+        <TShirtSizeSelect
+          name="value"
+          label="Value"
+          defaultValue={task.value}
+          register={register}
+        />
 
-        <div>
-          <label className="block text-sm">Effort</label>
-          <select {...register('effort')} className="p-2 border rounded">
-            {tShirtSizes.map(size => (
-              <option key={size} value={size}>{size}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div>
-        <input
-          {...register('tags')}
-          placeholder="Tags (comma-separated)"
-          className="w-full p-2 border rounded"
+        <TShirtSizeSelect
+          name="effort"
+          label="Effort"
+          defaultValue={task.effort}
+          register={register}
         />
       </div>
 
-      <button
-        type="submit"
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
+      <div>
+        <Input
+          {...register('tags')}
+          placeholder="Tags (comma-separated)"
+        />
+      </div>
+
+      <Button type="submit">
         Save
-      </button>
+      </Button>
     </form>
   );
 };

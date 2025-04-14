@@ -1,10 +1,18 @@
 - Favor readability, good naming and simplicity over everything else
+- Names should be specific enough to clearly express the purpose and behavior of the component
+- Names should be generic enough to be reusable
+- Name abstractions to match the scope of the implementation
 - Favor domain driven design for code and folder structure
 - In typescript, define all interfaces, don't define function return values
 - Use comments sparingly, and only to explain the WHY in complex code, not the what
 - Before introducing circular dependencies, ask
 - Review your code for best practices
-- When writing tests, use the rules from betterspecs.org
+  - Reuse components, adapt existing ones for the new use case
+  - Avoid circular dependencies
+  - Be succinct and avoid redundant checks
+- For tests, use the rules from betterspecs.org
+  - Prefer blackbox testing
+- For tests, ask before changing the production code
 - When considering multiple options, provide your suggestions at the end
 - If you need more context, ask
 - I am a senior engineer, limit explanations
